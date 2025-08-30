@@ -164,9 +164,9 @@ while True:
 
             command_2 = get_comand(2)
             if (command_2==1):
-                Visitor.return_a_book()
+                Visitor.return_a_book(visitors_books[number], visitors_debts[number])
             else:
-                Visitor.take_a_book()
+                Visitor.take_a_book(visitors_books[number], visitors_debts[number])
             
         else:
             user_name = input("Введите имя пользователя: ")
@@ -182,6 +182,7 @@ while True:
     else:
         #тут тип будет режим админа, можно будет добавлять и удалять книги а ещё смотреть должников
         print("Вы вошли в режим администратора")
+
 
 
 
