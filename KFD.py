@@ -47,30 +47,43 @@ visitors_books = [["Дворянское гнездо - Иван Тургене�
 visitors_debts = [12, 23, 14, 0, 17, 5, 30, 26, 7]
 
 guest_index = []
-guest_names = []
 guest_books = []
 guest_debts = []
+guest_count = -1
 
-
-def get_comand(max_comand, error = "Выбранное число не является командой"):
+def get_comand(max_comand, error = "Выбранное число не является командой", min_comand = 1):
     while True:
         try:
             user_input = int(input())
-            if (user_input<1 or user_input>max_comand):
+            if (user_input<min_comand or user_input>max_comand):
                 raise Exception(error)
-            if (user_input>=1 and user_input<=max_comand):
+            if (user_input>=min_comand and user_input<=max_comand):
                     return user_input
         except ValueError:
             print("Пожалуйста, введите корректную команду.")
         except Exception as e:
             print(e)
 
+def get_index(default_index = visitors_index):
+    while True:
+        try:
+            user_index = int(input("Введите пятизначный индекс пользователя: "))
+            if(user_index in default_index):
+                return user_index
+            else:
+                print("Такой индекс отсутствует в списке, попробуйте ещё раз")
+        except:
+            print("Некорректный ввод, попробуйте ещё раз")
+
 class Person:
     default_status = "Guest"
-
+    default_name = "None"
     
     def __init__(self, name, index, taken_books, debt, status, max_debt, max_taken_books):
-        self.__name = name
+        if name:
+            self.__name = name
+        else:
+            self.__name = Person.default_name
         self.__index = index
         self.__taken_books = taken_books
         self.__debt = debt
@@ -107,8 +120,8 @@ class Person:
         if len(taken_books) == 0:
             print("У вас нет книг из библиотеки")
         else:
-            for book in taken_books:
-                free_books.append(book)
+            for j in taken_books:
+                free_books.append(j)
             taken_books.clear()
             print("Вы сдали все книги")
             debt_index = visitors_index.index(index)
@@ -135,7 +148,7 @@ class Professor(Person):
 
 class Guest(Person):
     def info(self):
-        print("Вы вошли в свой личный кабинет!\nКак гостю вам доступна только 1 книга сроком на 7 дней")
+        print("Как гостю вам доступна только 1 книга сроком на 7 дней\nЕсли вы хотите вернуть книгу, обратитесь к администратору")
 
     def take_a_book_for_guest(self, taken_books, debt, max_taken_books, max_debt):
         print("Выберите по индексу книгу, которую хотите взять:")
@@ -146,14 +159,20 @@ class Guest(Person):
         free_books.pop(chosen_index)
         print("Выход из личного кабинета")
 
+
+    @staticmethod
+    def return_a_book_for_guest(index, taken_books, debt):
+        for i in taken_books:
+            free_books.append(i)
+        taken_books.clear()
+        print("Книга возвращается в библиотеку")
     
         
 
 
 
-guest_count = -1
 while True:
-    print("""Добро пожаловать в библиотеку \'Читательный сад!\'\n
+    print("""Добро пожаловать в библиотеку \'Читательный сад\'!\n
 У нас вы можете взять книгу напрокат совершенно бесплатно\n
 Пожалуйста, выберите режим, в котором будете работать:\n
 1:  Студент или преподаватель(обязательно нужно быть зарегистрированным в списке библиотеки)\n
@@ -199,20 +218,66 @@ while True:
                 Visitor.take_a_book(visitors_books[number], visitors_debts[number], max_books, max_debt)
             
         else:
-            user_name = input("Введите имя пользователя: ")
-            guest_count +=1
-            guest_index.append(guest_count+1)
-            guest_names.append(user_name)
+            print("Придумайте пятизначный индекс")
+            while True:
+                flag = 0
+                user_index = get_comand(99999, "Число не подходит под формат индекса", 10000)
+                for i in range(0, len(visitors_index)):
+                    if (user_index==visitors_index[i]):
+                        flag = 1
+                for i in range(0,len(guest_index)):
+                    if (user_index==guest_index[i]):
+                        flag = 1
+                if (flag!=0):
+                    print("Придумайте другой индекс, этот уже занят")
+                else:
+                    break
+            guest_count+=1
+            guest_index.append(user_index)
             guest_books.append([])
             guest_debts.append(7)
-            Visitor = Guest(guest_names[guest_count], guest_index[guest_count], guest_books[guest_count], guest_debts[guest_count], "", 1, 7)
+            Visitor = Guest("", guest_index[guest_count], guest_books[guest_count], guest_debts[guest_count], "", 1, 7)
             print(Visitor)
             Visitor.info()           
             Visitor.take_a_book_for_guest(guest_books[guest_count], guest_debts[guest_count], 1, 7)
     else:
-        #тут тип будет режим админа, можно будет добавлять и удалять книги а ещё смотреть должников
-        print("Chit-mod")
+        print("""Вы вошли в режим Админа\nПожалуйста, выберите необходимую вам операцию\n
+1 - Добавить новую книгу\n2 - Просмотреть список должников\n3 - подтвердить операцию возврата
+для незарегистрированных пользователей\n4 - Удалить книгу из библиотеки""")
+        command_3 = get_comand(5)
+        if (command_3==1):
+            new_book = input("Введите название книги: ")
+            autor = input("И её автора: ")
+            free_books.append(f"{new_book} - {autor}")
+            print("Новая книга добавлена в библиотеку")
+        elif (command_3==2):
+            print("\n\n______________________________________________\n\n")
+            for i in range(0,len(visitors_index)):
+                if(len(visitors_books[i])!=0):
+                   print(f"""Индекс пользователя - {visitors_index[i]}\nИмя пользователя - {visitors_names[i]}\nСтатус - {visitors_status[i]}\nКоличество книг - {len(visitors_books[i])}
+Дней до возврата - {visitors_debts[i]}""")
+                   print("\n\n______________________________________________\n\n")
+            
+            for i in range(0,len(guest_index)):
+                print(f"Индекс гостя - {guest_index[i]}\nДней до возврата - {guest_debts[i]}")
+                print("\n\n______________________________________________\n\n")
+        elif (command_3==3):
+            if (len(guest_index)!=0):
+                user_index = get_index(guest_index)
+                if user_index in guest_index:
+                    i = guest_index.index(user_index)
+                    Guest.return_a_book_for_guest(guest_index[i], guest_books[i], guest_debts[i])
+                    del guest_index[i]
+                    del guest_books[i]
+                    del guest_debts[i]
+                    guest_count-=1
+            else:
+                print("Среди гостей должников нет")
 
+        elif (command_3==4):
+            pass
+
+    print("\n\n\n\n\n\n")
 
 
 
