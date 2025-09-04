@@ -31,8 +31,6 @@ free_books = [
     "Бесы - Фёдор Достоевский"
 ]
 
-class MyException(Exception):
-    print("aboba")
 
 visitors_index = (12345, 54321, 22334, 17364, 65867, 36456, 98079, 75864, 55555)
 visitors_status = ('student', 'professor', 'student', 'student', 'professor', 'student', 'professor', 'professor', 'professor')
@@ -56,7 +54,6 @@ guest_count = -1
 
 def get_comand(max_comand, error = "Выбранное число не является командой", min_comand = 1):
     while True:
-        MyException()
         try:
             user_input = int(input())
             if (user_input<min_comand or user_input>max_comand):
@@ -296,6 +293,7 @@ while True:
                     break
 
     print("\n\n\n\n\n\n")
+
 
 
 
