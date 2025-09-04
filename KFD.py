@@ -31,6 +31,9 @@ free_books = [
     "Бесы - Фёдор Достоевский"
 ]
 
+class MyException(Exception):
+    print("aboba")
+
 visitors_index = (12345, 54321, 22334, 17364, 65867, 36456, 98079, 75864, 55555)
 visitors_status = ('student', 'professor', 'student', 'student', 'professor', 'student', 'professor', 'professor', 'professor')
 visitors_names = ('Sasha', 'Tolya', 'Masha', 'Vasya', 'Nikita', 'Veronika', 'Sonya', 'Anton', 'Valera')
@@ -53,6 +56,7 @@ guest_count = -1
 
 def get_comand(max_comand, error = "Выбранное число не является командой", min_comand = 1):
     while True:
+        MyException()
         try:
             user_input = int(input())
             if (user_input<min_comand or user_input>max_comand):
@@ -160,7 +164,7 @@ class Guest(Person):
         print("Выход из личного кабинета")
 
 
-    @staticmethod
+    @staticmethod   
     def return_a_book_for_guest(index, taken_books, debt):
         for i in taken_books:
             free_books.append(i)
@@ -241,9 +245,9 @@ while True:
             Visitor.info()           
             Visitor.take_a_book_for_guest(guest_books[guest_count], guest_debts[guest_count], 1, 7)
     else:
+        #тут тип будет режим админа, можно будет добавлять и удалять книги а ещё смотреть должников
         print("""Вы вошли в режим Админа\nПожалуйста, выберите необходимую вам операцию\n
-1 - Добавить новую книгу\n2 - Просмотреть список должников\n3 - подтвердить операцию возврата
-для незарегистрированных пользователей\n4 - Удалить книгу из библиотеки""")
+1 - Добавить новую книгу\n2 - Просмотреть список должников\n3 - Подтвердить операцию возврата для незарегистрированных пользователей\n4 - Удалить книгу из библиотеки""")
         command_3 = get_comand(5)
         if (command_3==1):
             new_book = input("Введите название книги: ")
@@ -275,9 +279,24 @@ while True:
                 print("Среди гостей должников нет")
 
         elif (command_3==4):
-            pass
+            
+            print("Введите название книги и её автора через дефис\nПример:\tВойна и мир - Лев Толстой")
+            flag = -1
+            while True:
+                book_search = input()
+                for i in range(0,len(free_books)):
+                    if book_search==free_books[i]:
+                        flag = i
+                        print(flag)
+                if(flag == -1):
+                    print("Название книги было введено некорректно")
+                else:
+                    free_books.pop(flag)
+                    print("Книга была удалена из библиотеки")
+                    break
 
     print("\n\n\n\n\n\n")
+
 
 
 
