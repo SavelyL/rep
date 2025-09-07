@@ -1,82 +1,152 @@
-free_books = [
-    "Война и мир - Лев Толстой",
-    "Анна Каренина - Лев Толстой",
-    "Преступление и наказание - Фёдор Достоевский",
-    "Идиот - Фёдор Достоевский",
-    "Братья Карамазовы - Фёдор Достоевский",
-    "Отцы и дети - Иван Тургенев",
-    "Мёртвые души - Николай Гоголь",
-    "Ревизор - Николай Гоголь",
-    "Евгений Онегин - Александр Пушкин",
-    "Капитанская дочка - Александр Пушкин",
-    "Герой нашего времени - Михаил Лермонтов",
-    "Обломов - Иван Гончаров",
-    "Гроза - Александр Островский",
-    "Бесприданница - Александр Островский",
-    "Вишнёвый сад - Антон Чехов",
-    "Три сестры - Антон Чехов",
-    "Чайка - Антон Чехов",
-    "Дама с собачкой - Антон Чехов",
-    "Муму - Иван Тургенев",
-    "Тарас Бульба - Николай Гоголь",
-    "Пиковая дама - Александр Пушкин",
-    "Бедные люди - Фёдор Достоевский",
-    "Детство - Лев Толстой",
-    "Отрочество - Лев Толстой",
-    "Юность - Лев Толстой",
-    "Шинель - Николай Гоголь",
-    "Записки охотника - Иван Тургенев",
-    "Воскресение - Лев Толстой",
-    "Каштанка - Антон Чехов",
-    "Бесы - Фёдор Достоевский"
-]
-
-
-visitors_index = (12345, 54321, 22334, 17364, 65867, 36456, 98079, 75864, 55555)
-visitors_status = ('student', 'professor', 'student', 'student', 'professor', 'student', 'professor', 'professor', 'professor')
-visitors_names = ('Sasha', 'Tolya', 'Masha', 'Vasya', 'Nikita', 'Veronika', 'Sonya', 'Anton', 'Valera')
-visitors_books = [["Дворянское гнездо - Иван Тургенев", "Шинель - Николай Гоголь"],
-                  ["Дубровский - Александр Пушкин","Маскарад - Михаил Лермонтов"],
-                  [],
-                  ["Демон - Михаил Лермонтов"],
-                  ["Казаки - Лев Толстой"],
-                  ["Униженные и оскорблённые - Фёдор Достоевский", "Кавказский пленник - Михаил Лермонтов", "Горе от ума - Александр Грибоедов"],
-                  [],
-                  ["Что делать? - Николай Чернышевский", "Записки из мёртвого дома - Фёдор Достоевский", "Смерть Ивана Ильича - Лев Толстой", "Дядя Ваня - Антон Чехов"],
-                  ["Мцыри - Михаил Лермонтов"]
-]
-visitors_debts = [12, 23, 14, 0, 17, 5, 30, 26, 7]
-
-guest_index = []
-guest_books = []
-guest_debts = []
 guest_count = -1
 
-def get_comand(max_comand, error = "Выбранное число не является командой", min_comand = 1):
-    while True:
-        try:
-            user_input = int(input())
-            if (user_input<min_comand or user_input>max_comand):
-                raise Exception(error)
-            if (user_input>=min_comand and user_input<=max_comand):
-                    return user_input
-        except ValueError:
-            print("Пожалуйста, введите корректную команду.")
-        except Exception as e:
-            print(e)
+class Library_Base:
+    _instance = None
 
-def get_index(default_index = visitors_index):
-    while True:
-        try:
-            user_index = int(input("Введите пятизначный индекс пользователя: "))
-            if(user_index in default_index):
-                return user_index
-            else:
-                print("Такой индекс отсутствует в списке, попробуйте ещё раз")
-        except:
-            print("Некорректный ввод, попробуйте ещё раз")
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialize_data()
+        return cls._instance
+
+    def _initialize_data(self):
+        self.__free_books = [
+            "Война и мир - Лев Толстой",
+            "Анна Каренина - Лев Толстой",
+            "Преступление и наказание - Фёдор Достоевский",
+            "Идиот - Фёдор Достоевский",
+            "Братья Карамазовы - Фёдор Достоевский",
+            "Отцы и дети - Иван Тургенев",
+            "Мёртвые души - Николай Гоголь",
+            "Ревизор - Николай Гоголь",
+            "Евгений Онегин - Александр Пушкин",
+            "Капитанская дочка - Александр Пушкин",
+            "Герой нашего времени - Михаил Лермонтов",
+            "Обломов - Иван Гончаров",
+            "Гроза - Александр Островский",
+            "Бесприданница - Александр Островский",
+            "Вишнёвый сад - Антон Чехов",
+            "Три сестры - Антон Чехов",
+            "Чайка - Антон Чехов",
+            "Дама с собачкой - Антон Чехов",
+            "Муму - Иван Тургенев",
+            "Тарас Бульба - Николай Гоголь",
+            "Пиковая дама - Александр Пушкин",
+            "Бедные люди - Фёдор Достоевский",
+            "Детство - Лев Толстой",
+            "Отрочество - Лев Толстой",
+            "Юность - Лев Толстой",
+            "Шинель - Николай Гоголь",
+            "Записки охотника - Иван Тургенев",
+            "Воскресение - Лев Толстой",
+            "Каштанка - Антон Чехов",
+            "Бесы - Фёдор Достоевский"
+        ]
+
+        self.__visitors_index = (12345, 54321, 22334, 17364, 65867, 36456, 98079, 75864, 55555)
+        self.__visitors_status = ('student', 'professor', 'student', 'student', 'professor', 'student', 'professor', 'professor', 'professor')
+        self.__visitors_names = ('Sasha', 'Tolya', 'Masha', 'Vasya', 'Nikita', 'Veronika', 'Sonya', 'Anton', 'Valera')
+        self.__visitors_books = [["Дворянское гнездо - Иван Тургенев", "Шинель - Николай Гоголь"],
+                               ["Дубровский - Александр Пушкин", "Маскарад - Михаил Лермонтов"],
+                               [],
+                               ["Демон - Михаил Лермонтов"],
+                               ["Казаки - Лев Толстой"],
+                               ["Униженные и оскорблённые - Фёдор Достоевский", "Кавказский пленник - Михаил Лермонтов", "Горе от ума - Александр Грибоедов"],
+                               [],
+                               ["Что делать? - Николай Чернышевский", "Записки из мёртвого дома - Фёдор Достоевский", "Смерть Ивана Ильича - Лев Толстой", "Дядя Ваня - Антон Чехов"],
+                               ["Мцыри - Михаил Лермонтов"]
+        ]
+        self.__visitors_debts = [12, 23, 14, 0, 17, 5, 30, 26, 7]
+
+        self.__guest_index = []
+        self.__guest_books = []
+        self.__guest_debts = []
+
+    @property
+    def free_books(self):
+        return self.__free_books
+    @property
+    def visitors_index(self):
+        return self.__visitors_index
+    @property
+    def visitors_status(self):
+        return self.__visitors_status
+    @property
+    def visitors_names(self):
+        return self.__visitors_names
+    @property
+    def visitors_books(self):
+        return self.__visitors_books
+    @property
+    def visitors_debts(self):
+        return self.__visitors_debts
+    @property
+    def guest_index(self):
+        return self.__guest_index
+    @property
+    def guest_books(self):
+        return self.__guest_books
+    @property
+    def guest_debts(self):
+        return self.__guest_debts
+
+
+
+LB = Library_Base()
+free_books = LB.free_books
+visitors_index = LB.visitors_index
+visitors_status = LB.visitors_status
+visitors_names = LB.visitors_names
+visitors_books = LB.visitors_books
+visitors_debts = LB.visitors_debts
+guest_index = LB.guest_index
+guest_books = LB.guest_books
+guest_debts = LB.guest_debts
+
+
+
+class My_Exception(Exception):
+
+    def __init__(self, str_exception):
+        self.str_exception = str_exception
+
+
+        
+    
+
+class Terminal_input:
+    
+    @staticmethod    
+    def get_comand(max_comand, error = "Выбранное число не является командой", min_comand = 1):
+        while True:
+            try:
+                user_input = int(input())
+                if (user_input<min_comand or user_input>max_comand):
+                    raise My_Exception(error)
+                if (user_input>=min_comand and user_input<=max_comand):
+                        return user_input
+            except ValueError:
+                print("Пожалуйста, введите корректную команду.")
+            except My_Exception as e:
+                print(e)
+
+    @staticmethod
+    def get_index(default_index = visitors_index):
+        while True:
+            try:
+                user_index = int(input("Введите пятизначный индекс пользователя: "))
+                if(user_index in default_index):
+                    return user_index
+                else:
+                    raise My_Exception("Такой индекс отсутствует в списке, попробуйте ещё раз")
+            except ValueError:
+                print("Некорректный ввод, попробуйте ещё раз")
+            except My_Exception as e:
+                print(e)
+
 
 class Person:
+    
     default_status = "Guest"
     default_name = "None"
     
@@ -105,14 +175,14 @@ class Person:
         if (debt==0 or len(taken_books)== max_taken_books):
             print("Вы не можете взять новые книги, пока не вернёте предыдущие")
         else:
-            print("Введите количество книг, которые планиуете взять")
-            count_book = get_comand(max_taken_books - len(taken_books),f"максимально количество книг, которые вы можете взять - {max_taken_books-len(taken_books)}")
+            print("Введите количество книг, которые планируете взять")
+            count_book = Terminal_input.get_comand(max_taken_books - len(taken_books),f"максимально количество книг, которые вы можете взять - {max_taken_books-len(taken_books)}")
             print(f"Количество книг, которые вы хотите взять - {count_book}")
             for i in range(0, count_book):
                 print("Выберите по индексу книгу, которую хотите взять:")
                 for j in range(0, len(free_books)):
                     print(f"{j+1} - {free_books[j]}")
-                chosen_index = get_comand(len(free_books)) - 1
+                chosen_index = Terminal_input.get_comand(len(free_books)) - 1
                 taken_books.append(free_books[chosen_index])
                 free_books.pop(chosen_index)
         print("Выход из личного кабинета")
@@ -133,7 +203,7 @@ class Person:
 class Student(Person):
     
     def info(self):
-        print("Вы вошли в свой личный кабинет!\nКак студенту вам доступны максимум 3 книги сроком на 14 дней\nНажмите\n1 - сли хотите вернуть книги обратно\n2 - если хотите взять ещё")
+        print("Вы вошли в свой личный кабинет!\nКак студенту вам доступны максимум 3 книги сроком на 14 дней\nНажмите\n1 - Если хотите вернуть книги обратно\n2 - если хотите взять ещё")
 
 
     
@@ -143,7 +213,7 @@ class Student(Person):
 class Professor(Person):
     
     def info(self):
-        print("Вы вошли в свой личный кабинет!\nКак преподавателю вам доступно максимум 10 книг сроком на 30 дней\nНажмите\n1 - сли хотите вернуть книги обратно\n2 - если хотите взять ещё")
+        print("Вы вошли в свой личный кабинет!\nКак преподавателю вам доступно максимум 10 книг сроком на 30 дней\nНажмите\n1 - Если хотите вернуть книги обратно\n2 - если хотите взять ещё")
 
 
 
@@ -155,7 +225,7 @@ class Guest(Person):
         print("Выберите по индексу книгу, которую хотите взять:")
         for j in range(0, len(free_books)):
             print(f"{j+1} - {free_books[j]}")
-        chosen_index = get_comand(len(free_books)) - 1
+        chosen_index = Terminal_input.get_comand(len(free_books)) - 1
         taken_books.append(free_books[chosen_index])
         free_books.pop(chosen_index)
         print("Выход из личного кабинета")
@@ -172,6 +242,7 @@ class Guest(Person):
 
 
 
+
 while True:
     print("""Добро пожаловать в библиотеку \'Читательный сад\'!\n
 У нас вы можете взять книгу напрокат совершенно бесплатно\n
@@ -180,23 +251,15 @@ while True:
 2:  Гость(регисрация не требуется)\n
 3:  Админ(добавление новых книг, просмотр базы должников и списка доступных книг)\n
 """)
-    command_1 = get_comand(3)
+    
+    command_1 = Terminal_input.get_comand(3)
     print(f"Вы выбрали режим {command_1}")
     if command_1!=3:
         if command_1 != 2:
-            while True:
-                try:
-                    user_index = int(input("Введите пятизначный индекс пользователя: "))
-                    if(user_index in visitors_index):
-                        break
-                    else:
-                        print("Такой индекс отсутствует в списке, попробуйте ещё раз")
-                except:
-                    print("Некорректный ввод, попробуйте ещё раз")
+            user_index = Terminal_input.get_index() 
             number = 0
             for i in range(0,len(visitors_index)):
                 if (user_index == visitors_index[i]):
-                    user_name = visitors_names
                     number = i
                     break
             if (visitors_status[number]=="student"):
@@ -212,40 +275,45 @@ while True:
                 print(Visitor)
                 Visitor.info()
 
-            command_2 = get_comand(2)
+            command_2 = Terminal_input.get_comand(2)
             if (command_2==1):
                 Visitor.return_a_book(visitors_books[number], visitors_debts[number], visitors_index[number], max_debt)
             else:
-                Visitor.take_a_book(visitors_books[number], visitors_debts[number], max_books, max_debt)
+                if(len(free_books)>=10):
+                    Visitor.take_a_book(visitors_books[number], visitors_debts[number], max_books, max_debt)
+                else:
+                    print("В библиотеке слишком мало книг. Пожалуйста, зайдите к нам позже")
             
         else:
-            print("Придумайте пятизначный индекс")
-            while True:
-                flag = 0
-                user_index = get_comand(99999, "Число не подходит под формат индекса", 10000)
-                for i in range(0, len(visitors_index)):
-                    if (user_index==visitors_index[i]):
-                        flag = 1
-                for i in range(0,len(guest_index)):
-                    if (user_index==guest_index[i]):
-                        flag = 1
-                if (flag!=0):
-                    print("Придумайте другой индекс, этот уже занят")
-                else:
-                    break
-            guest_count+=1
-            guest_index.append(user_index)
-            guest_books.append([])
-            guest_debts.append(7)
-            Visitor = Guest("", guest_index[guest_count], guest_books[guest_count], guest_debts[guest_count], "", 1, 7)
-            print(Visitor)
-            Visitor.info()           
-            Visitor.take_a_book_for_guest(guest_books[guest_count], guest_debts[guest_count], 1, 7)
+            if(len(free_books)>=1):
+                print("Придумайте пятизначный индекс")
+                while True:
+                    flag = 0
+                    user_index = Terminal_input.get_comand(99999, "Число не подходит под формат индекса", 10000)
+                    for i in range(0, len(visitors_index)):
+                        if (user_index==visitors_index[i]):
+                            flag = 1
+                    for i in range(0,len(guest_index)):
+                        if (user_index==guest_index[i]):
+                            flag = 1
+                    if (flag!=0):
+                        print("Придумайте другой индекс, этот уже занят")
+                    else:
+                        break
+                guest_count+=1
+                guest_index.append(user_index)
+                guest_books.append([])
+                guest_debts.append(7)
+                Visitor = Guest("", guest_index[guest_count], guest_books[guest_count], guest_debts[guest_count], "", 1, 7)
+                print(Visitor)
+                Visitor.info()           
+                Visitor.take_a_book_for_guest(guest_books[guest_count], guest_debts[guest_count], 1, 7)
+            else:
+                print("В библиотеке слишком мало книг. Пожалуйста, зайдите к нам позже")
     else:
-        #тут тип будет режим админа, можно будет добавлять и удалять книги а ещё смотреть должников
         print("""Вы вошли в режим Админа\nПожалуйста, выберите необходимую вам операцию\n
 1 - Добавить новую книгу\n2 - Просмотреть список должников\n3 - Подтвердить операцию возврата для незарегистрированных пользователей\n4 - Удалить книгу из библиотеки""")
-        command_3 = get_comand(5)
+        command_3 = Terminal_input.get_comand(4)
         if (command_3==1):
             new_book = input("Введите название книги: ")
             autor = input("И её автора: ")
@@ -264,7 +332,7 @@ while True:
                 print("\n\n______________________________________________\n\n")
         elif (command_3==3):
             if (len(guest_index)!=0):
-                user_index = get_index(guest_index)
+                user_index = Terminal_input.get_index(guest_index)
                 if user_index in guest_index:
                     i = guest_index.index(user_index)
                     Guest.return_a_book_for_guest(guest_index[i], guest_books[i], guest_debts[i])
@@ -284,7 +352,6 @@ while True:
                 for i in range(0,len(free_books)):
                     if book_search==free_books[i]:
                         flag = i
-                        print(flag)
                 if(flag == -1):
                     print("Название книги было введено некорректно")
                 else:
@@ -293,8 +360,3 @@ while True:
                     break
 
     print("\n\n\n\n\n\n")
-
-
-
-
-
